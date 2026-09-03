@@ -9,7 +9,7 @@
     {
       "name": "gin-recon",
       "description": "Deterministic static-analysis inventory & audit for Gin route surfaces. Enumerate routes and middleware chains, classify authentication as proven/public/unknown, and generate OpenAPI 3.1 + SARIF + HTML documentation — no AI, no target execution.",
-      "version": "0.1.1-syncprobe",
+      "version": "0.1.0",
       "source": {
         "source": "github",
         "repo": "sagnikhaldar/gin-recon"
