@@ -1,0 +1,51 @@
+name: Sync plugin versions
+
+# Mirror each plugin's .claude-plugin/plugin.json version into the marketplace
+# catalog. Plugins are released in their own repos; this keeps the catalog from
+# drifting without a manual edit here. Runs daily and on demand; opens a PR when
+# anything changed.
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Sync versions from upstream plugin manifests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/sync-plugin-versions.sh
+
+      - name: Open a PR when the catalog changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- .claude-plugin/marketplace.json; then
+            echo "catalog already in sync"
+            exit 0
+          fi
+          branch="ci/sync-plugin-versions-${RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add .claude-plugin/marketplace.json
+          git commit -m "Sync plugin versions from upstream manifests"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" "HEAD:${branch}"
+          gh pr create --base main --head "$branch" \
+            --title "Sync plugin versions" \
+            --body "Automated: mirrors each plugin's \`.claude-plugin/plugin.json\` version into the marketplace catalog."

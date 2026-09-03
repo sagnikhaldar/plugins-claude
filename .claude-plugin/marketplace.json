@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "sagnikhaldar",
+  "owner": {
+    "name": "Sagnik Haldar"
+  },
+  "description": "Claude Code plugins maintained by sagnikhaldar.",
+  "plugins": [
+    {
+      "name": "gin-recon",
+      "description": "Deterministic static-analysis inventory & audit for Gin route surfaces. Enumerate routes and middleware chains, classify authentication as proven/public/unknown, and generate OpenAPI 3.1 + SARIF + HTML documentation — no AI, no target execution.",
+      "version": "0.1.0",
+      "source": {
+        "source": "github",
+        "repo": "sagnikhaldar/gin-recon"
+      },
+      "homepage": "https://github.com/sagnikhaldar/gin-recon",
+      "license": "MIT",
+      "keywords": [
+        "gin",
+        "golang",
+        "security",
+        "audit",
+        "routes",
+        "middleware",
+        "authentication",
+        "static-analysis",
+        "openapi",
+        "sarif"
+      ]
+    }
+  ]
+}
